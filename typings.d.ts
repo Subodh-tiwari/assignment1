@@ -8,5 +8,11 @@ declare module 'typings' {
             created_at ?: Date
             updated_at ?: Date
         }
+        interface Response {
+            id : number
+            make : string
+            model : string
+            year : number
+        }
     }
 }

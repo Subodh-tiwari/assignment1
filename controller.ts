@@ -22,10 +22,20 @@ const controller = {
             });
     },
 
-    fetch(): Bluebird<Model.Car[]> {
+    fetch(): Bluebird<Model.Response[]> {
         return Cars
             .fetch()
             .then(data => data.toJSON())
+            .then(data => {
+                return data.map(datum => {
+                    return {
+                        id: datum.id,
+                        make: datum.make,
+                        model: datum.model,
+                        year: datum.year
+                    }
+                })
+            })
             .catch(err => {
                 console.log(err);
                 return [];
@@ -42,17 +52,25 @@ const controller = {
             });
     },
 
-    update(data: Model.Car): Bluebird<Model.Car> {
+    update(data: Model.Car): Bluebird<Model.Response> {
+        data.updated_at = new Date();
         return new Car({ id: data.id })
             .save(data, { method: 'update', patch: true })
-            .then(user => user.toJSON())
+            .then(data => data.toJSON())
+            .then(data => {
+                return {
+                    id: data.id,
+                    make: data.make,
+                    model: data.model,
+                    year: data.year
+                } as Model.Response
+            })
             .catch(err => {
                 console.log(err);
-                return {};
             });
     },
 
-    search(str: string): Bluebird<Model.Car[]> {
+    search(str: string): Bluebird<Model.Response[]> {
         return Cars
             .query(qb => qb.where('make', 'LIKE', `%${str}%`)
                 .orWhere('model', 'LIKE', `%${str}%`)
@@ -60,6 +78,16 @@ const controller = {
             )
             .fetch()
             .then(data => data.toJSON())
+            .then(data => {
+                return data.map(datum => {
+                    return {
+                        id: datum.id,
+                        make: datum.make,
+                        model: datum.model,
+                        year: datum.year
+                    }
+                })
+            })
             .catch(err => {
                 console.log(err);
                 return [];

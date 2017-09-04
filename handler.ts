@@ -13,14 +13,11 @@ import controller from './controller';
 
 const handler = {
     insert(request: Request, reply: ReplyNoContinue) {
-        const make = request.payload.make;
-        const model = request.payload.model;
-        const year = request.payload.year;
 
         const data: Model.Car = {
-            make,
-            model,
-            year,
+            make: request.payload.make,
+            model: request.payload.model,
+            year: request.payload.year,
             created_at: new Date(),
             updated_at: new Date()
         };
